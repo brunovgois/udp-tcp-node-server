@@ -2,13 +2,16 @@ const dgram = require('dgram');
 
 const socket = dgram.createSocket({type: 'udp4', reuseAddr: true},
 (buffer, sender) => {
-    const message = buffer.toString();
+    let message = buffer.toString();
     const invertedMessage = inverseCapitalization(message)
+
     console.log({
         kind: "UDP_MESSAGE",
         message,
         sender
       });
+      
+      message = invertedMessage.join("")
 
       socket.send(invertedMessage, sender.port, sender.address, error => {
         if (error) {
@@ -16,7 +19,7 @@ const socket = dgram.createSocket({type: 'udp4', reuseAddr: true},
         } else {
           console.log({
             kind: "RESPOND",
-            message: invertedMessage,
+            message: message,
             sender
           });
         }
